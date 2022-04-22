@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='gjrbotlib',
-    version='0.1.0',    
+    version='0.2.0',    
     description='Common files for the GJR telegram bots',
     url='https://github.com/gj-regensburg/gjr-telegram-common',
     author='Benjamin Huth',
@@ -11,5 +11,6 @@ setup(
     packages=['gjrbotlib'],
     install_requires=['python-telegram-bot',
                       'arrow',                     
-                      'ics'],
+                      'icalendar',
+                      'recurring_ical_events'],
 )
