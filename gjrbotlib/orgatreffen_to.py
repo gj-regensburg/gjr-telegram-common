@@ -1,34 +1,30 @@
-import requests
 import arrow
-from ics import Calendar
 import re
+import requests
+
+from calendar_helper import get_sorted_events_next_4_weeks
 
 
 def get_next_orgatreffen_to(url, make_url_from_date):
     try:
-        c = Calendar(requests.get(url).text)
+        next_4_weeks = get_sorted_events_next_4_weeks(url)
     except:
         return "Fehler beim Zugriff auf Kalender"
-    
-    now = arrow.utcnow()
-    next_month = arrow.utcnow().shift(months=1)
-    
-    next_4_weeks = [ event for event in c.events if event.begin.is_between(now, next_month) ]
-    next_4_weeks.sort()
     
     next_orgatreffen = None
         
     for e in next_4_weeks:
-        if e.name.lower().find("orgatreffen") != -1:
+        if "orgatreffen" in e["SUMMARY"].lower():
             next_orgatreffen = e
             break
     
-    pretty_date = e.begin.to('Europe/Berlin').format('DD.MM.YYYY')
+    orgatreffen_begin = arrow.get(next_orgatreffen['DTSTART'].dt)
+    pretty_date = orgatreffen_begin.to('Europe/Berlin').format('DD.MM.YYYY')
         
     if next_orgatreffen is None:
         return "Kein Orgatreffen in den nächsten 4 Wochen gefunden."
     
-    url = make_url_from_date(e.begin)
+    url = make_url_from_date(orgatreffen_begin)
     
     try:
         r = requests.get(url, allow_redirects=True)

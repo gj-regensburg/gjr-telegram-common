@@ -5,13 +5,10 @@ import recurring_ical_events
 
 
 def get_dates_next_month(url, calendar_name):
-    c = icalendar.Calendar.from_ical(requests.get(url).text)
-
-    now = arrow.utcnow()
-    next_month = arrow.utcnow().shift(months=1)
-
-    next_4_weeks = recurring_ical_events.of(c).between(now.datetime, next_month.datetime)
-    next_4_weeks = sorted(next_4_weeks, key=lambda e: arrow.get(e['DTSTART'].dt))
+    try:
+        next_4_weeks = get_sorted_events_next_4_weeks(url)
+    except:
+        return "Fehler beim Zugriff auf Kalender"
 
     lines = []
     lines.append("Termine für '{}' in den nächsten 4 Wochen:".format(calendar_name))
@@ -27,7 +24,7 @@ def get_dates_next_month(url, calendar_name):
     return text
 
 def make_date_summary(gjr_calendar_url, gjr_vorstands_calendar_url = None):
-
+    
     text = get_dates_next_month(gjr_calendar_url, "GJR Kalender")
     
     if gjr_vorstands_calendar_url is not None:
