@@ -3,6 +3,8 @@ import arrow
 import icalendar
 import recurring_ical_events
 
+from gjrbotlib.calendar_helper import get_sorted_events_next_4_weeks
+
 
 def get_dates_next_month(url, calendar_name):
     try:

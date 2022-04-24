@@ -2,7 +2,7 @@ import arrow
 import re
 import requests
 
-from calendar_helper import get_sorted_events_next_4_weeks
+from gjrbotlib.calendar_helper import get_sorted_events_next_4_weeks
 
 
 def get_next_orgatreffen_to(url, make_url_from_date):
