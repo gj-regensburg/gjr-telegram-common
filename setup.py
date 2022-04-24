@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='gjrbotlib',
-    version='0.2.0',    
+    version='0.2.1',    
     description='Common files for the GJR telegram bots',
     url='https://github.com/gj-regensburg/gjr-telegram-common',
     author='Benjamin Huth',
