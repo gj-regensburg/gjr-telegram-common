@@ -33,12 +33,14 @@ def parse_vosi_pad_for_todos(vosi_pad_url):
 
             if match:
                 task = match.group(1).strip()
-                assignee = match.group(2)[1:-1].strip().lower()
+                assignees = match.group(2)[1:-1].strip().lower().split(',')
+                assignees = [ a.strip() for a in assignees ]
+                
+                for assignee in assignees:
+                    if not assignee in matched_todos:
+                        matched_todos[assignee] = []
 
-                if not assignee in matched_todos:
-                    matched_todos[assignee] = []
-
-                matched_todos[assignee].append(task)
+                    matched_todos[assignee].append(task)
             else:
                 pos = line.find("TODO")
                 unmatched_todos.append(line[pos+4:])
@@ -60,10 +62,10 @@ def parse_vosi_pad_for_todos(vosi_pad_url):
 
 
 
-def parse_all_todos_of_person(person):
+def parse_all_todos_of_person(person, vosi_pad_url):
     ''' returns a string containing the todos '''
     
-    r = requests.get("https://textbegruenung.de/p/GJR_Vorstand_2022_frischer_wind/export/txt", allow_redirects=True)
+    r = requests.get(vosi_pad_url, allow_redirects=True)
     content = r.content.decode('utf-8')
     
     todos = {}
@@ -83,9 +85,10 @@ def parse_all_todos_of_person(person):
 
             if match:
                 task = match.group(1).strip()
-                assignee = match.group(2)[1:-1].strip().lower()
+                assignees = match.group(2)[1:-1].strip().lower().split(',')
+                assignees = [ a.strip() for a in assignees ]
 
-                if assignee.lower() == person.lower():
+                if person.lower() in assignees:
                     todos[current_meeting].append(task)
     
     lines = []
